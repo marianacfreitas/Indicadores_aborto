@@ -63,7 +63,7 @@ for (ano in 2014:2023) {
     filter(!if_any(starts_with("DIAG"), ~ . %in% cids_nao_aborto))
   
   # Salvar o arquivo CSV na pasta "dados_csv"
-  write.csv(dados_filtrados2, file.path("dados_SIH_csv", paste0("dados_completos_SIH_abortos_", ano, ".csv")), row.names = FALSE)
+  write.csv(dados_filtrados2, file.path(paste0("dados_completos_SIH_abortos_", ano, ".csv")), row.names = FALSE)
 }
 
 
@@ -73,7 +73,7 @@ lista_dados <- list()
 # Loop de 2014 a 2024
 for (ano in 2014:2024) {
   # Construir o caminho do arquivo
-  caminho_arquivo <- file.path("dados_SIH_csv", paste0("dados_completos_SIH_abortos_", ano, ".csv"))
+  caminho_arquivo <- file.path(paste0("dados_completos_SIH_abortos_", ano, ".csv"))
   
   # Verificar se o arquivo existe antes de tentar lê-lo
   if (file.exists(caminho_arquivo)) {
