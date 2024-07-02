@@ -6,7 +6,7 @@ library(readr)
 base_url <- "https://dadosabertos.ans.gov.br/FTP/PDA/TISS/HOSPITALAR/2020/"
 
 # Lista de anos 
-anos <- 2015
+anos <- 2015:2022
 
 # Lista de unidades federativas do Brasil
 ufs <- c("AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO")
@@ -96,6 +96,6 @@ dados_filtrados <- dados_filtrados %>%
 dados_filtrados_cid <- dados_filtrados %>% 
   filter(cid_aborto == 1 | cid_nao_aborto == 1)
 
-write.csv(dados_filtrados_cid, "dados_filtrados_CIDs_ANS_2015_hosp.csv")
+write.csv(dados_filtrados_cid, "dados_filtrados_CIDs_ANS_2015_2023_hosp.csv")
 ##vamos usar essa base para concatenar com os casos de aborto por DET
  
