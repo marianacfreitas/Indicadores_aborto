@@ -73,7 +73,7 @@ lista_dados <- list()
 # Loop de 2014 a 2024
 for (ano in 2014:2024) {
   # Construir o caminho do arquivo
-  caminho_arquivo <- file.path(paste0("dados_completos_SIH_abortos_", ano, ".csv"))
+  caminho_arquivo <- file.path(paste0("SIH/data/dados_completos_SIH_abortos_", ano, ".csv"))
   
   # Verificar se o arquivo existe antes de tentar lê-lo
   if (file.exists(caminho_arquivo)) {
@@ -105,12 +105,12 @@ dados_filtrados <- dados_completos %>%
   filter(SEXO == 3 | SEXO == 2) %>% #filtragem sexo feminino 
   filter(fet != "não") #filtragem fet
 
- 
+
 #filtrar IDENT diferente de 5
 dados_filtrados <- dados_filtrados %>% 
   filter(IDENT != 5 | is.na(IDENT))
 # > table(dados$IDENT) #só tem IDENT 1
- 
+
 
 #extraindo a UF de residência
 dados_filtrados <- dados_filtrados  %>%  
@@ -163,7 +163,26 @@ dados_muni_fet_pivotado <- dados_muni_fet_pivotado %>%
 
 dados_muni_fet_pivotado <- dados_muni_fet_pivotado %>% 
   filter(ano >= 2015 & ano <= 2023)
- 
+
 write.csv(dados_muni_fet_pivotado, file = "dados_SIH_aborto_2015_2023_tabela.csv", row.names = FALSE)
- 
+
+#### Para os estados
+
+dados_uf_fet <- dados_filtrados %>% 
+  group_by(UF_sigla, ano, fet) %>% 
+  summarise(cont = n())
+
+dados_uf_fet_pivotado <- dados_uf_fet %>%
+  pivot_wider(names_from = fet, values_from = cont)
+
+dados_uf_fet_pivotado <- dados_uf_fet_pivotado %>% 
+  mutate(sih_menor_30 = ifelse(is.na(sih_menor_30), 0, sih_menor_30),
+         sih_30_a_39 = ifelse(is.na(sih_30_a_39), 0, sih_30_a_39),
+         sih_40_a_49 = ifelse(is.na(sih_40_a_49), 0, sih_40_a_49)) %>% 
+  mutate(sih_total = sih_menor_30 + sih_30_a_39 + sih_40_a_49)
+
+dados_uf_fet_pivotado <- dados_uf_fet_pivotado %>% 
+  filter(ano >= 2015 & ano <= 2023)
+
+write.csv(dados_uf_fet_pivotado, file = "dados_SIH_aborto_2015_tabela_uf.csv", row.names = FALSE)
 

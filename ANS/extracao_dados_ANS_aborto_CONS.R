@@ -12,26 +12,26 @@ anos <- 2015:2022
 ufs <- c("AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO")
 
 # Criar uma pasta para armazenar os arquivos baixados
-dir.create("arquivos_TISS", showWarnings = FALSE)
+dir.create("ANS/arquivos_TISS", showWarnings = FALSE)
 
 # Loop para baixar e descompactar os arquivos para cada ano
-for (ano in anos) {
+for (ano in anos) { 
   base_url <- paste0("https://dadosabertos.ans.gov.br/FTP/PDA/TISS/HOSPITALAR/", ano, "/")
   for (uf in ufs) {
     for (mes in 1:12) {
       # if (!(uf == "AC" && mes == 1)) {
         mes_str <- sprintf("%02d", mes)
         url <- paste0(base_url, uf, "/", uf, "_", ano, mes_str, "_HOSP_CONS.zip")
-        filename <- paste0("arquivos_TISS/", uf, "_", ano, mes_str, "_HOSP_CONS.zip")
+        filename <- paste0("ANS/arquivos_TISS/", uf, "_", ano, mes_str, "_HOSP_CONS.zip")
         download.file(url, filename)
-        unzip(filename, exdir = "arquivos_TISS")
+        unzip(filename, exdir = "ANS/arquivos_TISS")
       # }
     }
   }
 }
 
 # Lista de todos os arquivos baixados
-arquivos <- list.files("arquivos_TISS", full.names = TRUE, pattern = "\\.csv", recursive = TRUE)
+arquivos <- list.files("ANS/arquivos_TISS", full.names = TRUE, pattern = "\\.csv", recursive = TRUE)
 
 # Loop para ler e processar os arquivos
 dados <- list()
@@ -57,7 +57,8 @@ for (arquivo in arquivos) {
 
 # Concatenar os dados em um único dataframe
 dados_concatenados_hosp <- bind_rows(dados)
-# write.csv(dados_concatenados_hosp, "dados_ANS_hosp_2015_21-11-23.csv")
+
+write.csv(dados_concatenados_hosp, "ANS/data/dados_ANS_hosp_2015_2022.csv")
 
 ###UM NOVO DIA, COMECE AQUI - FILTRAGEM TODOS CASOS ANS#######################
 # dados_concatenados_hosp <- read.csv("dados_ANS_hosp_2015_21-11-23.csv")
@@ -96,6 +97,6 @@ dados_filtrados <- dados_filtrados %>%
 dados_filtrados_cid <- dados_filtrados %>% 
   filter(cid_aborto == 1 | cid_nao_aborto == 1)
 
-write.csv(dados_filtrados_cid, "dados_filtrados_CIDs_ANS_2015_2023_hosp.csv")
+write.csv(dados_filtrados_cid, "ANS/dados_filtrados_CIDs_ANS_2015_2023_hosp.csv")
 ##vamos usar essa base para concatenar com os casos de aborto por DET
  
